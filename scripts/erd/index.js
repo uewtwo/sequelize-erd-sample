@@ -212,7 +212,7 @@ module.exports = ({
   ...rest
 }) => {
   const models = pickModels({ source, include, omit });
-  console.log(models);
+  // console.log(models);
   const src = generateDot({ ...rest, models });
   const vis = new Vis({ Module, render });
   return vis.renderString(src, {

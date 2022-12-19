@@ -4,7 +4,7 @@
     "sequelize-erd": "./bin/generate"
   },
   "scripts": {
-    "generate:erd": "ts-node ./scripts/erd/generate.ts"
+    "erd:generate": "ts-node ./scripts/erd/generate.ts"
   },
   "dependencies": {
     "commander": "^2.9.0",

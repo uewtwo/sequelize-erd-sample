@@ -1,0 +1,37 @@
+name: generate erd
+on: push
+
+jobs:
+  gen_erd:
+    name: generate-erd-and-push
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.push.head.ref }}
+          token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Setup Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+      - name: Install dependencies
+        run: npm install
+      - name: Generate erd
+        run: npm run erd:generate
+      - name: Count uncommit files
+        id: check_diff
+        run: |
+          git status --porcelain | wc -l
+          file_count=$(git status --porcelain | wc -l)
+          echo "file_count=$file_count" >> $GITHUB_OUTPUT
+        working-directory: ./database
+      - name: Commit erd
+        if: ${{ steps.check_diff.outputs.file_count != '0' }}
+        run: |
+          git config user.name github-actions
+          git config user.email github-actions@github.com
+          git add .
+          git commit -m "generate erd from gh actions"
+          git push
+        working-directory: ./database
